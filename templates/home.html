@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flight Prediction</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        text-align: center;
+        margin-top: 50px;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+      }
+      label {
+        margin-right: 20px;
+      }
+      input[type="text"], input[type="number"] {
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        margin-bottom: 10px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+        margin-top: 20px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #3e8e41;
+      }
+      #result {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Flight Fare Prediction</h1>
+    <style>
+        #flight-form {
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 20px;
+          background-color: #f7f7f7;
+          border-radius: 5px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        label {
+          display: block;
+          margin-bottom: 5px;
+        }
+        input[type="number"],
+        input[type="text"] {
+          padding: 10px;
+          border-radius: 3px;
+          border: none;
+          background-color: #eee;
+          width: 100%;
+          box-sizing: border-box;
+          margin-bottom: 20px;
+          font-size: 16px;
+        }
+        button[type="submit"] {
+          background-color: #4CAF50;
+          color: #fff;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 16px;
+        }
+        button[type="submit"]:hover {
+          background-color: #3e8e41;
+        }
+      </style>
+      
+      <form id="flight-form">
+        <div>
+          <label for="Quarter">Quarter:</label>
+          <input type="number" id="Quarter" name="Quarter" required>
+        </div>
+        <div>
+          <label for="Origin">Origin:</label>
+          <input type="text" id="Origin" name="Origin" required>
+        </div>
+        <div>
+          <label for="Dest">Destination:</label>
+          <input type="text" id="Dest" name="Dest" required>
+        </div>
+        <div>
+          <label for="Miles">Miles:</label>
+          <input type="number" id="Miles" name="Miles" required>
+        </div>
+        <div>
+          <label for="NumTicketsOrdered">Number of Tickets:</label>
+          <input type="number" id="NumTicketsOrdered" name="NumTicketsOrdered" required>
+        </div>
+        <div>
+          <label for="AirlineCompany">Airline Company:</label>
+          <style>
+            /* Style for the select element */
+            select {
+              padding: 10px;
+              font-size: 16px;
+              border-radius: 5px;
+              border: none;
+              background-color: #f0f0f0;
+            }
+          
+            /* Style for the select element when focused */
+            select:focus {
+              outline: none;
+              box-shadow: 0px 0px 3px 1px #ccc;
+            }
+          
+            /* Style for the options */
+            option {
+              background-color: #fff;
+              color: #333;
+            }
+          
+            /* Style for the selected option */
+            option:checked {
+              background-color: #0077ff;
+              color: #fff;
+            }
+          </style>
+          <select id="AirlineCompany" name="AirlineCompany" required>
+            <option value="">Select Airline Company</option>
+            <option value="AA">American Airlines</option>
+            <option value="AS">Alaskan Airlines</option>
+            <option value="WN">Southwest Airline Co.</option>
+            <option value="DL">Delta Air Lines Inc</option>
+            <option value="UA">United Air Lines Inc</option>
+            <option value="NK">Spirit Airlines</option>
+            <option value="B6">Jetblue Airways</option>
+            <option value="VX">Virgin America</option>
+            <option value="SY">Sun Country Airlines</option>
+          </select>
+        </div>
+        <button type="submit">Predict</button>
+      </form>
+      
+    <div id="result"></div>
+    <script>
+      const form = document.getElementById('flight-form');
+      const resultDiv = document.getElementById('result');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const data = {
+          Quarter: parseFloat(document.getElementById('Quarter').value),
+          Origin: document.getElementById('Origin').value,
+          Dest: document.getElementById('Dest').value,
+          Miles: parseFloat(document.getElementById('Miles').value),
+          NumTicketsOrdered: parseFloat(document.getElementById('NumTicketsOrdered').value),
+          AirlineCompany: document.getElementById('AirlineCompany').value,
+        };
+        fetch('/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({data: data}),
+        })
+        .then(response => response.json())
+        .then(result => {
+          resultDiv.innerText = `The predicted ticket price is $${result.toFixed(2)}.`;
+        })
+        .catch(error => {
+          console.error(error);
+          resultDiv.innerText = 'An error occurred while predicting the ticket price.';
+        });
+      });
+    </script>
+  </body>
+</html>
