@@ -1,0 +1,9 @@
+Flask
+sklearn
+pandas
+numpy
+matplotlib
+gunicorn
+seaborn
+category_encoders
+lightgbm
